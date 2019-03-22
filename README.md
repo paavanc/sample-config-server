@@ -108,7 +108,7 @@ Response:
 ```
 curl -X GET \
   http://localhost:9080/test-dev.properties \
-  -H 'Authorization: Basic weewq' \
+  -H 'Authorization: Basic c2FtcGxlOnBhc3N3b3Jk' \
   ```
 Response:
 ```
