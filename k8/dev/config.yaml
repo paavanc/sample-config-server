@@ -1,0 +1,12 @@
+apiVersion: v1
+data:
+  spring_profiles_active: default
+  spring_cloud_config_enabled : "false"
+  security_user_name: sample
+  security_user_password: password
+  spring_cloud_config_server_git_username: "no"
+  spring_cloud_config_server_git_password: way
+kind: ConfigMap
+metadata:
+  name: cf-config
+  namespace: default

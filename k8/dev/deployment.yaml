@@ -1,0 +1,83 @@
+apiVersion: apps/v1 # for versions before 1.8.0 use apps/v1beta1
+kind: Deployment
+metadata:
+  name: config-deployment
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: configserver
+  replicas: 1 
+  template: 
+    metadata:
+      labels:
+        app: configserver
+    spec:
+      imagePullSecrets:
+        - name: my-docker-credentials
+      containers:
+      - name: configserver
+        image: #tbd
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1000Mi
+        ports:
+        - containerPort: 9050
+          name: server
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          valueFrom:
+            configMapKeyRef:
+              name: cf-config
+              key: spring_profiles_active
+        - name: SPRING_CLOUD_CONFIG_ENABLED
+          valueFrom:
+            configMapKeyRef:
+              name: cf-config
+              key: spring_cloud_config_enabled
+        - name: SECURITY_USER_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: cf-config
+              key: security_user_name
+        - name: SECURITY_USER_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              name: cf-config
+              key: security_user_password
+        - name: SPRING_CLOUD_CONFIG_SERVER_GIT_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: cf-config
+              key: spring_cloud_config_server_git_username
+        - name: SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              name: cf-config
+              key: spring_cloud_config_server_git_password
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 9080
+          initialDelaySeconds: 60
+          timeoutSeconds: 10
+          successThreshold: 1
+          failureThreshold: 1
+          periodSeconds: 60
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 9080
+          initialDelaySeconds: 60
+          timeoutSeconds: 10
+          successThreshold: 1
+          failureThreshold: 1
+          periodSeconds: 60

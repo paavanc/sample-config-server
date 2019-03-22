@@ -1,0 +1,15 @@
+version: '3.0'
+services:
+    configapp:
+        image: tbd
+        container_name: config
+        environment:
+            - SPRING_PROFILES_ACTIVE=local       
+            - SPRING_CLOUD_CONFIG_ENABLED=true
+            - SPRING_CONFIG_LOCATION=/spring_config/example.properties            
+        ports:
+            - 9080:9080
+        volumes:
+            - /Users/paavanchopra/git/sample-config-server/example_properties:/spring_config
+        network_mode: bridge
+        

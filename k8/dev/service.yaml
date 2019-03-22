@@ -1,0 +1,24 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: config-service
+  namespace: default
+  annotations:
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v0
+      kind:  Mapping
+      name:  config-service
+      rewrite: /
+      prefix: /config/
+      service: config-service:80
+spec:
+  type: NodePort
+  selector:
+    app: configserver
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9080
+
+
